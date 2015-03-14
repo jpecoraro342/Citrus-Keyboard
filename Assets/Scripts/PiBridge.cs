@@ -124,7 +124,9 @@ public class PiBridge : MonoBehaviour {
 		int sector = rightAngleToZone (right, numRightSectors);
 		if (sector != lastRightSector) {
 			lastRightSector = sector;
-			pi.setFocusActive(lastLeftSector, lastRightSector);
+			if (lastLeftSector != -1) {
+				pi.setFocusActive(lastLeftSector, lastRightSector);
+			}
 		}
 	}
 

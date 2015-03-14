@@ -40,7 +40,7 @@ public class Pi : MonoBehaviour {
 		new string[] {"X","x","("},
 		new string[] {"Y","y",")"},
 		new string[] {"Z","z","-"},
-		new string[] {"\u2423"," "," "},
+		new string[] {"\u2423","\u2423 ","\u2423"},
 		new string[] {" "," "," "},
 		new string[] {" "," "," "},
 		new string[] {" "," "," "}
