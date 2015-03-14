@@ -36,9 +36,23 @@ public class ControllerInput : MonoBehaviour {
 	}
 
 	void UpdateDebugText () {
-		Quaternion leftJoystickAngle = Quaternion.Euler(LeftInput);
-		Quaternion rightJoystickAngle = Quaternion.Euler(RightInput);
+		float leftJoystickAngle = getVectorAngle(LeftInput);
+		float rightJoystickAngle = getVectorAngle(RightInput);
 
 		DebugText.text = "Left Joystick: " + LeftInput + "\nAngle: " + leftJoystickAngle + "\n\nRight Joystick: " + RightInput + "\nAngle: " + rightJoystickAngle;
+	}
+
+	float getVectorAngle(Vector2 InputVector) {
+		if (InputVector.x == 0 && InputVector.y == 0) {
+			return 0;
+		}
+
+		float angle = Mathf.Atan2(InputVector.x, InputVector.y) * Mathf.Rad2Deg;
+
+		if (angle < 0) {
+			angle = 360 + angle;
+		}
+
+		return angle;
 	}
 }
