@@ -100,7 +100,7 @@ public class ControllerInput : MonoBehaviour {
 	}
 
 	void ChangeKeyboard(KeyboardType Keyboard) {
-		Manager.ChangeKeyboard(Keyboard);
+		Manager.changeKeyboard(Keyboard);
 	}
 
 	//Check to See if the Left Joystick selected "Cancel" and the Right Joystick "Selected the Character"

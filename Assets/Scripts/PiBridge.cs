@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PiBridge : MonoBehaviour {
 
+	public InputField InputTextArea;
+
 	int lastLeftSector;
 	int lastRightSector;
+
 	public Pi pi; 
 	// Use this for initialization
 	void Start () {
@@ -33,9 +37,7 @@ public class PiBridge : MonoBehaviour {
 
 	//right thumbstick released, add character to textbox
 	public void characterSelect() {
-		pi.getChar (lastLeftSector, lastRightSector);
-
-		//TODO: write to textbox
+		InputTextArea.text += pi.getChar (lastLeftSector, lastRightSector);
 
 		pi.resetFocus ();
 	}
