@@ -3,6 +3,8 @@ using System.Collections;
 
 public class PiBridge : MonoBehaviour {
 
+	int lastLeftSector;
+	int lastRightSector;
 	// Use this for initialization
 	void Start () {
 	

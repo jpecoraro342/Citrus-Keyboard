@@ -3,6 +3,7 @@ using System.Collections;
 
 
 public class Pi : MonoBehaviour {
+	enum focusStates { DEFAULT, FOCUS, DISABLED };
 	float radius = 4;
 	int numSlugs = 30;
 	int numSectors = 6;
@@ -13,19 +14,19 @@ public class Pi : MonoBehaviour {
 
 	public GameObject SlugClone;
 	string[][] charset = new string[][] {
-		new string[] {"A","a","0"}, //0
-		new string[] {"B","b","1"}, //1
-		new string[] {"C","c","2"}, //2
-		new string[] {"D","d","3"}, //3
-		new string[] {"E","e","4"}, //4
-		new string[] {"F","f","5"}, //5
-		new string[] {"G","g","6"}, //6
-		new string[] {"H","h","7"}, //7
-		new string[] {"I","i","8"}, //8
-		new string[] {"J","j","9"}, //9
-		new string[] {"K","k","."}, //10
-		new string[] {"L","l",","}, //11
-		new string[] {"M","m","?"}, //12
+		new string[] {"A","a","0"}, //0 0 
+		new string[] {"B","b","1"}, //1 1
+		new string[] {"C","c","2"}, //2 2
+		new string[] {"D","d","3"}, //3 3
+		new string[] {"E","e","4"}, //4 4
+		new string[] {"F","f","5"}, //5 0
+		new string[] {"G","g","6"}, //6 1
+		new string[] {"H","h","7"}, //7 2
+		new string[] {"I","i","8"}, //8 3 
+		new string[] {"J","j","9"}, //9 4
+		new string[] {"K","k","."}, //10 0
+		new string[] {"L","l",","}, //11 1
+		new string[] {"M","m","?"}, //12 2
 		new string[] {"N","n","!"},
 		new string[] {"O","o","\'"},
 		new string[] {"P","p","\""},
@@ -92,6 +93,7 @@ public class Pi : MonoBehaviour {
 	}
 
 	void makeSlugs() {
+		int sector = 0;
 		for (int i = 0; i < charset.Length; i ++) {
 
 			GameObject slug = (GameObject)Instantiate (SlugClone, Vector3.zero, Quaternion.identity);
@@ -99,21 +101,36 @@ public class Pi : MonoBehaviour {
 			slug.transform.localPosition = Vector3.zero;
 
 			Slug slugScript = slug.GetComponent<Slug> ();
-			slugScript.slugMaker (new string[] {"A", "a"}, 100.0f, 100.0f, 0);
+			slugScript.slugMaker (new string[] {"A", "a"}, 100.0f, 100.0f, 0, sector++);
 			slugs[i] = slugScript;
 		}
 
 	}
 
-	//sector is the sector selected on the left thumbstick
-	void setFocus(int sector) {
+	//sector is the sector selected on the <LEFT> thumbstick
+	void setFocusDisabled(int sector) {
 		for (int i = 0; i < charset.Length; i++) {
-			if (i % 6 != 0) {
-				slugs[i].setFocus(1); //1 is grayed
+			if (slugs[i].sector != sector) {
+				slugs[i].setFocus((int)focusStates.DISABLED); 
+			} else {
+				slugs[i].setFocus ((int)focusStates.DEFAULT);
+			}
+		}
+	}
+
+	//sector is the sector selected by the <RIGHT> thumbstick
+	//sector is the sector selected by the <RIGHT> thumbstick
+	//sector is the sector selected by the <RIGHT> thumbstick
+	void setFocusActive(int sector) {
+		for (int i = 0; i < charset.Length; i++) {
+			if (slugs[i].sector == sector) {
+				slugs[i].setFocus((int)focusStates.FOCUS); 
 			}
 		}
 	}
 	
+
+
 	// Update is called once per frame
 	void Update () {
 
