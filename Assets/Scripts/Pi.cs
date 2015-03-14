@@ -1,57 +1,138 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class Pi : MonoBehaviour {
-	//int radius;
-	//int numSlugs;
-	int numSectors;
-	//Slug[] slug;
-	LineRenderer lr;
+	enum focusStates { DEFAULT, FOCUS, DISABLED };
+	float radius = 4;
+	int numSlugs = 30;
+	int numSectors = 6;
+
+	public GameObject cylinder;
+	public LineRenderer lr;
+	Slug[] slugs;
+
+	public GameObject SlugClone;
+	string[][] charset = new string[][] {
+		new string[] {"A","a","0"}, //0 0 
+		new string[] {"B","b","1"}, //1 1
+		new string[] {"C","c","2"}, //2 2
+		new string[] {"D","d","3"}, //3 3
+		new string[] {"E","e","4"}, //4 4
+		new string[] {"F","f","5"}, //5 0
+		new string[] {"G","g","6"}, //6 1
+		new string[] {"H","h","7"}, //7 2
+		new string[] {"I","i","8"}, //8 3 
+		new string[] {"J","j","9"}, //9 4
+		new string[] {"K","k","."}, //10 0
+		new string[] {"L","l",","}, //11 1
+		new string[] {"M","m","?"}, //12 2
+		new string[] {"N","n","!"},
+		new string[] {"O","o","\'"},
+		new string[] {"P","p","\""},
+		new string[] {"Q","q","/"},
+		new string[] {"R","r","@"},
+		new string[] {"S","s","#"},
+		new string[] {"T","t","$"},
+		new string[] {"U","u","%"},
+		new string[] {"V","v","&"},
+		new string[] {"W","w","*"},
+		new string[] {"X","x","("},
+		new string[] {"Y","y",")"},
+		new string[] {"Z","z","-"},
+		new string[] {" "," "," "},
+	};
 
 	// Use this for initialization
 	void Start () {
-		this.numSectors = 6;
-		lr = gameObject.AddComponent<LineRenderer> ();
 		drawPi ();
-		//this.slug = new Slug[this.numSlugs];
+		makeSlugs ();
+
+		//You need this in here because the canvas was doing some weird thing resetting itself
+		gameObject.transform.localPosition = new Vector3(0, 0, 0);
+	}
+
+	void makePi(int numSectors, int numSlugs, float radius) {
+		this.numSectors = numSectors;
+		this.numSlugs = numSlugs;
+		this.radius = radius;
 	}
 
 	void drawPi() {
-		//GameObject cylinder = GameObject.CreatePrimitive (PrimitiveType.Cylinder);
-		//cylinder.transform.rotation = Quaternion.AngleAxis (90, Vector3.left);
-		//cylinder.transform.localScale = new Vector3 (3,(float) 0.1,3);
 		lr.SetVertexCount (460+2*numSectors);
-		lr.SetWidth (0.2f,0.2f);
+		lr.SetWidth (0.1f,0.1f);
+		float gray = 0.9f;
+		lr.SetColors (new Color(gray,gray,gray,1), new Color(gray,gray,gray,1));
 
-		int sectorSize = 30;
-		for (int i = 0, startAngle = 0; i < 360/30; i++, startAngle += sectorSize) {
-			drawSector (31*i,0,0,startAngle,startAngle+sectorSize);
-		}
-	}
-
-	void drawSector(int index,int centerX, int centerY, int startDegree, int endDegree) {
-		int points = endDegree - startDegree;
-		lr.SetPosition (index++, new Vector3 (centerX, centerY, 0f));
-
-		float x, y, z = 0f, angle = startDegree;
-		for (int i = 0; i < points; i++) {
-			x = Mathf.Sin (Mathf.Deg2Rad * angle) * 4;
-			y = Mathf.Cos (Mathf.Deg2Rad * angle) * 4;
-			lr.SetPosition (index++,new Vector3(x,y,z) );
+		int sectorSize = 360/numSectors;
+		float x, y, z = 0f, angle = sectorSize/-2;
+		for (int i = 0; i < 361; i++) {
+			x = Mathf.Sin (Mathf.Deg2Rad * angle) * radius;
+			y = Mathf.Cos (Mathf.Deg2Rad * angle) * radius;
+			lr.SetPosition (i+1,new Vector3(x,y,z) );
 			angle += 1;
 		}
 
+		for (int i = 0, startAngle = sectorSize/2; i < 360/sectorSize -1; i++, startAngle += sectorSize) {
+			drawSector (363+(i*2),0,0,startAngle);
+		}
+
+		cylinder.transform.rotation = Quaternion.AngleAxis (90, Vector3.left);
+		cylinder.transform.position = new Vector3 (0, -0.03f, 0.1f);
+		cylinder.transform.localScale = new Vector3 (radius * 2 + 0.04f, 0.1f, radius * 2 + 0.04f);
+	}
+
+	void drawSector(int index,int centerX, int centerY, int startDegree) {
+		LineRenderer lr = gameObject.GetComponent<LineRenderer> ();
 		lr.SetPosition (index++, new Vector3 (centerX, centerY, 0f));
+		float x, y, z = 0f, angle = startDegree;
+		x = Mathf.Sin (Mathf.Deg2Rad * startDegree) * radius;
+		y = Mathf.Cos (Mathf.Deg2Rad * startDegree) * radius;
+		lr.SetPosition (index++,new Vector3(x,y,z) );
+
 	}
 
 	void makeSlugs() {
-		//for (int i = 0; i < this.numSlugs; i++) {
-			//slug[i] = new Slug();
-		//}
+		int sector = 0;
+		for (int i = 0; i < charset.Length; i ++) {
+
+			GameObject slug = (GameObject)Instantiate (SlugClone, Vector3.zero, Quaternion.identity);
+			slug.transform.parent = gameObject.transform;
+			slug.transform.localPosition = Vector3.zero;
+
+			Slug slugScript = slug.GetComponent<Slug> ();
+			slugScript.slugMaker (new string[] {"A", "a"}, 100.0f, 100.0f, 0, sector++);
+			slugs[i] = slugScript;
+		}
+
+	}
+
+	//sector is the sector selected on the <LEFT> thumbstick
+	void setFocusDisabled(int sector) {
+		for (int i = 0; i < charset.Length; i++) {
+			if (slugs[i].sector != sector) {
+				slugs[i].setFocus((int)focusStates.DISABLED); 
+			} else {
+				slugs[i].setFocus ((int)focusStates.DEFAULT);
+			}
+		}
+	}
+
+	//sector is the sector selected by the <RIGHT> thumbstick
+	//sector is the sector selected by the <RIGHT> thumbstick
+	//sector is the sector selected by the <RIGHT> thumbstick
+	void setFocusActive(int sector) {
+		for (int i = 0; i < charset.Length; i++) {
+			if (slugs[i].sector == sector) {
+				slugs[i].setFocus((int)focusStates.FOCUS); 
+			}
+		}
 	}
 	
+
+
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 }
