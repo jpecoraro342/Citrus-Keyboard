@@ -13,6 +13,7 @@ public class Pi : MonoBehaviour {
 	void Start () {
 		this.numSectors = 6;
 		lr = gameObject.AddComponent<LineRenderer> ();
+		lr.transform.position = new Vector3 (0,4,0);
 		drawPi ();
 		makeSlugs ();
 		//Slug s1 = new Slug (new char['A','a','?'],4,0);
@@ -23,18 +24,20 @@ public class Pi : MonoBehaviour {
 
 		lr.SetVertexCount (460+2*numSectors);
 		lr.SetWidth (0.1f,0.1f);
+		lr.SetPosition (0, new Vector3 (1, 1, 0));
+		lr.SetPosition (1, new Vector3 (1, 2, 0));
 
 		float x, y, z = 0f, angle = 0;
-		for (int i = 0; i <= 360; i++) {
+		for (int i = 0; i <= 0; i++) {
 			x = Mathf.Sin (Mathf.Deg2Rad * angle) * 4;
 			y = Mathf.Cos (Mathf.Deg2Rad * angle) * 4;
-			lr.SetPosition (i+1,new Vector3(x,y,z) );
+			//lr.SetPosition (i+1,new Vector3(x,y,z) );
 			angle += 1;
 		}
 
 		int sectorSize = 360/numSectors;
 		for (int i = 0, startAngle = sectorSize; i < 360/sectorSize; i++, startAngle += sectorSize) {
-			drawSector (362+(i*2),0,0,startAngle);
+			//drawSector (362+(i*2),0,0,startAngle);
 		}
 	}
 
