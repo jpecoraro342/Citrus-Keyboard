@@ -3,11 +3,12 @@ using System.Collections;
 
 
 public class Pi : MonoBehaviour {
-	//int radius;
-	//int numSlugs;
-	int numSectors;
+	float radius = 4;
+	int numSlugs = 30;
+	int numSectors = 6;
+	public GameObject cylinder;
+	public LineRenderer lr;
 	//Slug[] slug;
-	LineRenderer lr;
 
 	public GameObject SlugClone;
 	string[,] charset = new string[,] {
@@ -42,10 +43,6 @@ public class Pi : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		this.numSectors = 6;
-		lr = gameObject.AddComponent<LineRenderer> ();
-		lr.transform.position = new Vector3 (0,4,0);
-
 		drawPi ();
 		makeSlugs ();
 
@@ -53,33 +50,42 @@ public class Pi : MonoBehaviour {
 		gameObject.transform.localPosition = new Vector3(0, 0, 0);
 	}
 
-	void drawPi() {
+	void makePi(int numSectors, int numSlugs, float radius) {
+		this.numSectors = numSectors;
+		this.numSlugs = numSlugs;
+		this.radius = radius;
+	}
 
+	void drawPi() {
 		lr.SetVertexCount (460+2*numSectors);
 		lr.SetWidth (0.1f,0.1f);
-		lr.SetPosition (0, new Vector3 (1, 1, 0));
-		lr.SetPosition (1, new Vector3 (1, 2, 0));
+		float gray = 0.9f;
+		lr.SetColors (new Color(gray,gray,gray,1), new Color(gray,gray,gray,1));
 
-		float x, y, z = 0f, angle = 0;
-		for (int i = 0; i <= 0; i++) {
-			x = Mathf.Sin (Mathf.Deg2Rad * angle) * 4;
-			y = Mathf.Cos (Mathf.Deg2Rad * angle) * 4;
-			//lr.SetPosition (i+1,new Vector3(x,y,z) );
+		int sectorSize = 360/numSectors;
+		float x, y, z = 0f, angle = sectorSize/-2;
+		for (int i = 0; i < 361; i++) {
+			x = Mathf.Sin (Mathf.Deg2Rad * angle) * radius;
+			y = Mathf.Cos (Mathf.Deg2Rad * angle) * radius;
+			lr.SetPosition (i+1,new Vector3(x,y,z) );
 			angle += 1;
 		}
 
-		int sectorSize = 360/numSectors;
-		for (int i = 0, startAngle = sectorSize; i < 360/sectorSize; i++, startAngle += sectorSize) {
-			//drawSector (362+(i*2),0,0,startAngle);
+		for (int i = 0, startAngle = sectorSize/2; i < 360/sectorSize -1; i++, startAngle += sectorSize) {
+			drawSector (363+(i*2),0,0,startAngle);
 		}
+
+		cylinder.transform.rotation = Quaternion.AngleAxis (90, Vector3.left);
+		cylinder.transform.position = new Vector3 (0, -0.03f, 0.1f);
+		cylinder.transform.localScale = new Vector3 (radius * 2 + 0.04f, 0.1f, radius * 2 + 0.04f);
 	}
 
 	void drawSector(int index,int centerX, int centerY, int startDegree) {
-
+		LineRenderer lr = gameObject.GetComponent<LineRenderer> ();
 		lr.SetPosition (index++, new Vector3 (centerX, centerY, 0f));
 		float x, y, z = 0f, angle = startDegree;
-		x = Mathf.Sin (Mathf.Deg2Rad * startDegree) * 4;
-		y = Mathf.Cos (Mathf.Deg2Rad * startDegree) * 4;
+		x = Mathf.Sin (Mathf.Deg2Rad * startDegree) * radius;
+		y = Mathf.Cos (Mathf.Deg2Rad * startDegree) * radius;
 		lr.SetPosition (index++,new Vector3(x,y,z) );
 
 	}
