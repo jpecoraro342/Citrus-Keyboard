@@ -95,33 +95,35 @@ public class Pi : MonoBehaviour {
 
 	void makeSlugs() {
 		float sectorLength = 2*3.1415f*3;
+		float extraPadding = 1;
 		Debug.Log ("Sector length: " + sectorLength);
-		float textWidth = 1;
+		float textWidth = 1f;
 		Debug.Log ("text Width: " + textWidth);
 		float degInSector = 360 / numSectors;
 		float padding = sectorLength - textWidth*(numSlugs/numSectors);
-		float paddingDeg = ((padding/sectorLength) * degInSector)/((numSlugs/numSectors) + 1);
+		float paddingDeg = ((padding/sectorLength) * degInSector)/((numSlugs/numSectors) + 1) + extraPadding;
 		float textDeg = (textWidth/sectorLength)* degInSector;
-		float insertTextAtDeg = degInSector / -2 + textDeg;// + paddingDeg;
+		float insertTextAtDeg = degInSector / -2 + textDeg + paddingDeg - (extraPadding*((numSlugs/numSectors)))/2;
 		Debug.Log("padding Deg: " + paddingDeg);
 		Debug.Log("insertTextAtDeg: " + insertTextAtDeg);
 		for (int i = 0, sector = 0, counter = 1; i < charset.Length; i ++, counter++) {
 			if (counter > numSlugs/numSectors) {
 				sector++;
 				counter = 1;
-insertTextAtDeg = degInSector / -2 + textDeg;// + paddingDeg) + sector*degInSector + textDeg;
+				insertTextAtDeg = (degInSector / -2 + textDeg + paddingDeg - (extraPadding*((numSlugs/numSectors)))/2) + sector*degInSector;
 				Debug.Log("New sector and insert Text at deg: "+ insertTextAtDeg);
 			}
 			GameObject slug = (GameObject)Instantiate (SlugClone, Vector3.zero, Quaternion.identity);
 			slug.transform.parent = gameObject.transform;
 			slug.transform.localPosition = Vector3.zero;
 
+			insertTextAtDeg -= 0.7f;
 			float x = Mathf.Sin (Mathf.Deg2Rad * insertTextAtDeg) * (radius + 0.4f);
 			float y = Mathf.Cos (Mathf.Deg2Rad * insertTextAtDeg) * (radius + 0.4f);
 			insertTextAtDeg += paddingDeg + textDeg;
 
 			Slug slugScript = slug.GetComponent<Slug> ();
-			slugScript.slugMaker (new string[] {"A", "a"}, x, y, 0);
+			slugScript.slugMaker (charset[i], x+0.12f, y-0.01f, 0);
 			//slugs[i] = slugScript;
 		}
 
