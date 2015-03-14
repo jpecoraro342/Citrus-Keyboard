@@ -29,8 +29,8 @@ public class ControllerInput : MonoBehaviour {
 	Vector2 LeftInput;
 	Vector2 RightInput;
 
-	bool LeftJoystickCentered;
-	bool RightJoystickCentered;
+	bool LeftJoystickCentered = true;
+	bool RightJoystickCentered = true;
 
 	bool LeftTriggerPressed;
 	bool RightTriggerPressed;
@@ -157,7 +157,13 @@ public class ControllerInput : MonoBehaviour {
 		float leftJoystickAngle = getVectorAngle(LeftInput);
 		float rightJoystickAngle = getVectorAngle(RightInput);
 
-		Manager.updateAngles(leftJoystickAngle, rightJoystickAngle);
+		if (!LeftJoystickCentered) {
+			Manager.updateLeft(leftJoystickAngle);
+		}
+
+		if (!RightJoystickCentered) {
+			Manager.updateRight(rightJoystickAngle);
+		}
 	}
 
 	//Math Methods
