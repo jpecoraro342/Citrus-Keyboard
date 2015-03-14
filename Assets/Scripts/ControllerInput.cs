@@ -3,14 +3,13 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class ControllerInput : MonoBehaviour {
+	public float VisualJoystickMagnitude = 30;
+	public float JoystickSmoothing = 20;
 
 	public Image LeftJoystick;
 	public Image RightJoystick;
 
 	public Text DebugText;
-
-	private float VisualJoystickMagnitude = 30;
-	private float JoystickSmoothing = 20;
 
 	private static string LeftTrigger = "LeftTrigger";
 	private static string RightTrigger = "RightTrigger";
