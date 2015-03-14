@@ -15,6 +15,8 @@ public class ControllerInput : MonoBehaviour {
 
 	public float CenteredThreshold = .1f;
 
+	public PiBridge Manager;
+
 	public Image LeftJoystick;
 	public Image RightJoystick;
 
@@ -47,10 +49,10 @@ public class ControllerInput : MonoBehaviour {
 		LeftInput = new Vector2(leftX, leftY);
 		RightInput = new Vector2(rightX, rightY);
 
+		UpdateManagerAngles();
 		CheckJoystickSelections();
 		UpdateKeyboard();
 		UpdateJoystickPositions();
-		UpdateDebugText();
 	}
 
 	void UpdateJoystickPositions() {
@@ -98,7 +100,7 @@ public class ControllerInput : MonoBehaviour {
 	}
 
 	void ChangeKeyboard(KeyboardType Keyboard) {
-		//TODO: call change keyboard on manager
+		Manager.ChangeKeyboard(Keyboard);
 	}
 
 	//Check to See if the Left Joystick selected "Cancel" and the Right Joystick "Selected the Character"
@@ -107,11 +109,11 @@ public class ControllerInput : MonoBehaviour {
 		bool CharacterSelected = DidRightJoystickCenter();
 
 		if (CancelSelected) {
-			//TODO: Tell the manager that a character was selected
+			Manager.cancelInput();
 		}
 
 		if (CharacterSelected) {
-			//TODO: Tell the manager that a character was selected
+			Manager.characterSelect();
 		}
 	}
 
@@ -150,10 +152,12 @@ public class ControllerInput : MonoBehaviour {
 			return true;
 		}
 	}
+	
+	void UpdateManagerAngles() {
+		float leftJoystickAngle = getVectorAngle(LeftInput);
+		float rightJoystickAngle = getVectorAngle(RightInput);
 
-	//Debugging
-	void UpdateDebugText() {
-
+		Manager.updateAngles(leftJoystickAngle, rightJoystickAngle);
 	}
 
 	//Math Methods

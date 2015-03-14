@@ -4,6 +4,7 @@ using System.Collections;
 
 public class Slug : MonoBehaviour {
 	enum focusStates { DEFAULT, FOCUS, DISABLED };
+
 	public string[] chars;
 	public float displacement;
 	public int id;
@@ -56,13 +57,15 @@ public class Slug : MonoBehaviour {
 				outline.enabled = false;
 				shadow.enabled = false;
 				break;
-			case (int) focusStates.ACTIVE :
+			case (int) focusStates.FOCUS :
 				textbox.color = highlightedColor;
 				outline.enabled = true;
 				shadow.enabled = true;
+				break;
+			default:
+				break;
 			}
 		}
-
 	}
 
 	// Update is called once per frame
