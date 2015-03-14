@@ -13,13 +13,9 @@ public class Pi : MonoBehaviour {
 		this.numSectors = 6;
 		lr = gameObject.AddComponent<LineRenderer> ();
 		drawPi ();
-		//this.slug = new Slug[this.numSlugs];
 	}
 
 	void drawPi() {
-		//GameObject cylinder = GameObject.CreatePrimitive (PrimitiveType.Cylinder);
-		//cylinder.transform.rotation = Quaternion.AngleAxis (90, Vector3.left);
-		//cylinder.transform.localScale = new Vector3 (3,(float) 0.1,3);
 		lr.SetVertexCount (460+2*numSectors);
 		lr.SetWidth (0.1f,0.1f);
 
