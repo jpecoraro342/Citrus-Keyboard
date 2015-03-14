@@ -17,8 +17,12 @@ public class PiBridge : MonoBehaviour {
 
 	public Pi pi; 
 
-	public int numLeftSectors = 5;
-	public int numRightSectors = 6;
+	public int numLeftSectors = 4;
+	public int numRightSectors = 5;
+
+	string[] lastTwoChars = new string[2] { "",""};
+	bool newSentence = true;
+	bool midSentence = false;
 	// Use this for initialization
 	void Start () {
 		
@@ -29,9 +33,33 @@ public class PiBridge : MonoBehaviour {
 		UpdateDebugText();
 	}
 
-	int angleToZone(float angle, int numZones) {
+	int rightAngleToZone(float angle, int numZones) {
 		//int numZones = pi.numSectors;
-		return (int)(angle + 360/(numZones*2))*numZones/360;
+		//return (int)(angle + 360/(numZones*2))*numZones/360;
+		int sector = 0;
+		int buffer = (((lastLeftSector-0)*(2 - (-2))) / (4 - 0)) - 2;
+		buffer *= 7;
+		if (angle < 30 + buffer) {
+			sector = 0;
+		} else if (angle < 90 + buffer) {
+			sector = 1;
+		} else if (angle < 150 + buffer) {
+			sector = 2;
+		} else if (angle < 210 + buffer) {
+			sector = 3;
+		} else if (angle < 270 + buffer) {
+			sector = 4;
+		} else if (angle < 330 + buffer) {
+			sector = 5;
+		} else {
+			sector = 0;
+		}
+		return sector;
+	}
+
+	int leftAngleToZone(float angle, int numZones) {
+		//int numZones = pi.numSectors;
+		return (int)(angle)*numZones/360;
 	}
 
 	public void changeKeyboard(KeyboardType keyboard) {
@@ -48,19 +76,42 @@ public class PiBridge : MonoBehaviour {
 
 	//right thumbstick released, add character to textbox
 	public void characterSelect() {
-
+		newSentence = false;
 		if (lastLeftSector != -1) {
-			InputTextArea.text += pi.getChar (lastLeftSector, lastRightSector);
+			string input = pi.getChar (lastLeftSector, lastRightSector);
+			InputTextArea.text += input;
 			pi.resetFocus ();
+
+			lastTwoChars[0] = lastTwoChars[1];
+			lastTwoChars[1] = input;
+
+
+			checkSentence();
+
 		}
 
 		lastRightSector = -1;
 	}
 
+	public void checkSentence() {
+		if ((lastTwoChars[0] + lastTwoChars[1]) == ". ") {
+			newSentence = true;
+			midSentence = false;
+		}
+		if (!midSentence) {
+			if (newSentence) {
+				changeKeyboard(KeyboardType.CAPITAL);
+				midSentence = true;
+			} else {
+				changeKeyboard (KeyboardType.LOWERCASE);
+				midSentence = true;
+			}
+		}
+	}
 	
 	public void updateLeft(float left) {
 		currentLeftJoystickAngle = left;
-		int sector = angleToZone (left, numLeftSectors);
+		int sector = leftAngleToZone (left, numLeftSectors);
 		if (sector != lastLeftSector) {
 			lastLeftSector = sector;
 			pi.setFocusDisabled(lastLeftSector);
@@ -69,7 +120,7 @@ public class PiBridge : MonoBehaviour {
 
 	public void updateRight(float right) {
 		currentRightJoystickAngle = right;
-		int sector = angleToZone (right, numRightSectors);
+		int sector = rightAngleToZone (right, numRightSectors);
 		if (sector != lastRightSector) {
 			lastRightSector = sector;
 			pi.setFocusActive(lastLeftSector, lastRightSector);

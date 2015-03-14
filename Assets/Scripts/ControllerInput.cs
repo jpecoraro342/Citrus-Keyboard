@@ -3,8 +3,8 @@ using UnityEngine.UI;
 using System.Collections;
 
 public enum KeyboardType {
-	LOWERCASE,
 	CAPITAL,
+	LOWERCASE,
 	NUMBERS,
 	SYMBOLS
 }
