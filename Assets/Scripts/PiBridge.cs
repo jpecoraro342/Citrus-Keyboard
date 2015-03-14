@@ -48,28 +48,31 @@ public class PiBridge : MonoBehaviour {
 
 	//right thumbstick released, add character to textbox
 	public void characterSelect() {
-		InputTextArea.text += pi.getChar (lastLeftSector, lastRightSector);
 
-		pi.resetFocus ();
+		if (lastLeftSector != -1) {
+			InputTextArea.text += pi.getChar (lastLeftSector, lastRightSector);
+			pi.resetFocus ();
+		}
+
 		lastRightSector = -1;
 	}
 
 	
 	public void updateLeft(float left) {
 		currentLeftJoystickAngle = left;
-		if (angleToZone(left, numLeftSectors) != lastLeftSector) {
-			lastLeftSector = angleToZone(left, numLeftSectors);
-			pi.setFocusDisabled(angleToZone(left, numLeftSectors));
+		int sector = angleToZone (left, numLeftSectors);
+		if (sector != lastLeftSector) {
+			lastLeftSector = sector;
+			pi.setFocusDisabled(lastLeftSector);
 		}
 	}
 
 	public void updateRight(float right) {
 		currentRightJoystickAngle = right;
-		
-		
-		if (angleToZone(right, numRightSectors) != lastRightSector) {
-			lastRightSector = angleToZone(right, numRightSectors);
-			pi.setFocusActive(angleToZone(right, numRightSectors));
+		int sector = angleToZone (right, numRightSectors);
+		if (sector != lastRightSector) {
+			lastRightSector = sector;
+			pi.setFocusActive(lastLeftSector, lastRightSector);
 		}
 	}
 
