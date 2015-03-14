@@ -9,53 +9,46 @@ public class Pi : MonoBehaviour {
 
 	public GameObject cylinder;
 	public LineRenderer lr;
-	public string stringToEdit = "Hello World";
-	//Slug[] slug;
+	Slug[] slugs;
 
 	public GameObject SlugClone;
-	string[,] charset = new string[,] {
-		{"A","a","0"},
-		{"B","b","1"},
-		{"C","c","2"},
-		{"D","d","3"},
-		{"E","e","4"},
-		{"F","f","5"},
-		{"G","g","6"},
-		{"H","h","7"},
-		{"I","i","8"},
-		{"J","j","9"},
-		{"K","k","."},
-		{"L","l",","},
-		{"M","m","?"},
-		{"N","n","!"},
-		{"O","o","\'"},
-		{"P","p","\""},
-		{"Q","q","/"},
-		{"R","r","@"},
-		{"S","s","#"},
-		{"T","t","$"},
-		{"U","u","%"},
-		{"V","v","&"},
-		{"W","w","*"},
-		{"X","x","("},
-		{"Y","y",")"},
-		{"Z","z","-"},
-		{" "," "," "},
+	string[][] charset = new string[][] {
+		new string[] {"A","a","0"}, //0
+		new string[] {"B","b","1"}, //1
+		new string[] {"C","c","2"}, //2
+		new string[] {"D","d","3"}, //3
+		new string[] {"E","e","4"}, //4
+		new string[] {"F","f","5"}, //5
+		new string[] {"G","g","6"}, //6
+		new string[] {"H","h","7"}, //7
+		new string[] {"I","i","8"}, //8
+		new string[] {"J","j","9"}, //9
+		new string[] {"K","k","."}, //10
+		new string[] {"L","l",","}, //11
+		new string[] {"M","m","?"}, //12
+		new string[] {"N","n","!"},
+		new string[] {"O","o","\'"},
+		new string[] {"P","p","\""},
+		new string[] {"Q","q","/"},
+		new string[] {"R","r","@"},
+		new string[] {"S","s","#"},
+		new string[] {"T","t","$"},
+		new string[] {"U","u","%"},
+		new string[] {"V","v","&"},
+		new string[] {"W","w","*"},
+		new string[] {"X","x","("},
+		new string[] {"Y","y",")"},
+		new string[] {"Z","z","-"},
+		new string[] {" "," "," "},
 	};
 
 	// Use this for initialization
 	void Start () {
 		drawPi ();
 		makeSlugs ();
-<<<<<<< HEAD
-		GUIText t = gameObject.AddComponent<GUIText> ();
-		t.text = "HELLO";
-		t.transform.position = new Vector3 (0.5f, 0.5f, 0f);
-=======
 
 		//You need this in here because the canvas was doing some weird thing resetting itself
 		gameObject.transform.localPosition = new Vector3(0, 0, 0);
->>>>>>> 73043760f2ac99657f8447da5d8dee58940a87e1
 	}
 
 	void makePi(int numSectors, int numSlugs, float radius) {
@@ -100,16 +93,26 @@ public class Pi : MonoBehaviour {
 	}
 
 	void makeSlugs() {
-		//for (int i = 0; i < this.numSlugs; i++) {
-			//slug[i] = new Slug();
-		//}
-		GameObject slug = (GameObject) Instantiate (SlugClone, Vector3.zero, Quaternion.identity);
-		slug.transform.parent = gameObject.transform;
-		slug.transform.localPosition = Vector3.zero;
+		for (int i = 0; i < charset.Length; i ++) {
 
-		Slug slugScript = slug.GetComponent<Slug> ();
-		slugScript.slugMaker(new string[] {"A", "a"}, 100.0f, 100.0f, 0);
+			GameObject slug = (GameObject)Instantiate (SlugClone, Vector3.zero, Quaternion.identity);
+			slug.transform.parent = gameObject.transform;
+			slug.transform.localPosition = Vector3.zero;
 
+			Slug slugScript = slug.GetComponent<Slug> ();
+			slugScript.slugMaker (new string[] {"A", "a"}, 100.0f, 100.0f, 0);
+			slugs[i] = slugScript;
+		}
+
+	}
+
+	//sector is the sector selected on the left thumbstick
+	void setFocus(int sector) {
+		for (int i = 0; i < charset.Length; i++) {
+			if (i % 6 != 0) {
+				slugs[i].setFocus(1); //1 is grayed
+			}
+		}
 	}
 	
 	// Update is called once per frame
