@@ -3,7 +3,7 @@ using System.Collections;
 
 
 public class Pi : MonoBehaviour {
-	enum focusStates { DEFAULT, FOCUS, DISABLED };
+	enum focusStates { DEFAULT, FOCUS, SELECTED, DISABLED };
 	float radius = 4;
 	int numSlugs = 30;
 	public int numSectors = 6;
@@ -138,7 +138,7 @@ public class Pi : MonoBehaviour {
 			if (slugs[i].lefthandSector != sector) {
 				slugs[i].setFocus((int)focusStates.DISABLED); 
 			} else {
-				slugs[i].setFocus ((int)focusStates.DEFAULT);
+				slugs[i].setFocus ((int)focusStates.FOCUS);
 			}
 		}
 	}
@@ -149,7 +149,7 @@ public class Pi : MonoBehaviour {
 	public void setFocusActive(int sector) {
 		for (int i = 0; i < charset.Length; i++) {
 			if (slugs[i].righthandSector == sector) {
-				slugs[i].setFocus((int)focusStates.FOCUS); 
+				slugs[i].setFocus((int)focusStates.SELECTED); 
 			}
 		}
 	}

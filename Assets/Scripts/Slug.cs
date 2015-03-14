@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class Slug : MonoBehaviour {
-	enum focusStates { DEFAULT, FOCUS, DISABLED };
+	enum focusStates { DEFAULT, FOCUS, SELECTED, DISABLED };
 
 	public string[] chars;
 	public float displacement;
@@ -68,6 +68,11 @@ public class Slug : MonoBehaviour {
 				textbox.color = highlightedColor;
 				outline.enabled = true;
 				shadow.enabled = true;
+				break;
+			case (int) focusStates.SELECTED :
+				textbox.color = defaultColor;
+				outline.enabled = true;
+				shadow.enabled = false;
 				break;
 			default:
 				break;
