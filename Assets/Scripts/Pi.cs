@@ -169,7 +169,7 @@ public class Pi : MonoBehaviour {
 	public string getChar(int left, int right) {
 		for (int i = 0; i < charset.Length; i++) {
 			if (slugs[i].lefthandSector == left && slugs[i].righthandSector == right) {
-				return slugs[i].activeChar + i;
+				return slugs[i].activeChar;
 			} 
 		}
 		return "WTF";
