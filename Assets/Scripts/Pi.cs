@@ -6,6 +6,7 @@ public class Pi : MonoBehaviour {
 	float radius = 4;
 	int numSlugs = 30;
 	int numSectors = 6;
+
 	public GameObject cylinder;
 	public LineRenderer lr;
 	//Slug[] slug;
@@ -96,9 +97,9 @@ public class Pi : MonoBehaviour {
 		//}
 		GameObject slug = (GameObject) Instantiate (SlugClone, Vector3.zero, Quaternion.identity);
 		slug.transform.parent = gameObject.transform;
+		slug.transform.localPosition = Vector3.zero;
 
 		Slug slugScript = slug.GetComponent<Slug> ();
-
 		slugScript.slugMaker(new string[] {"A", "a"}, 100.0f, 100.0f, 0);
 
 	}
