@@ -34,6 +34,9 @@ public class ControllerInput : MonoBehaviour {
 
 	bool LeftTriggerPressed;
 	bool RightTriggerPressed;
+
+	bool LeftBumperPressed;
+	bool RightBumperPressed;
 	
 	void Start() {
 	
@@ -53,6 +56,7 @@ public class ControllerInput : MonoBehaviour {
 		CheckJoystickSelections();
 		UpdateManagerAngles();
 		UpdateKeyboard();
+		UpdateBumpers();
 		UpdateJoystickPositions();
 	}
 
@@ -62,6 +66,30 @@ public class ControllerInput : MonoBehaviour {
 
 		LeftJoystick.rectTransform.anchoredPosition = Vector2.Lerp(LeftJoystick.rectTransform.anchoredPosition, LeftPosition, JoystickSmoothing * Time.deltaTime);
 		RightJoystick.rectTransform.anchoredPosition = Vector2.Lerp(RightJoystick.rectTransform.anchoredPosition, RightPosition, JoystickSmoothing * Time.deltaTime);
+	}
+
+	//Update Bumpers
+	void UpdateBumpers() {
+		bool DidPressLeftBumper = Input.GetButton(LeftBumper);
+		bool DidPressRightBumper = Input.GetButton(RightBumper);
+		
+		if (DidPressLeftBumper && !LeftBumperPressed) {
+			LeftBumperPressed = true;
+			Manager.backSpace();
+		}
+
+		if (DidPressRightBumper && !RightBumperPressed) {
+			RightBumperPressed = true;
+			Manager.backSpace();
+		}
+		
+		if (!DidPressLeftBumper && LeftBumperPressed) {
+			LeftBumperPressed = false;
+		}
+		
+		if (!DidPressRightBumper && RightBumperPressed) {
+			RightBumperPressed = false;
+		}
 	}
 
 	//Update Keyboard
