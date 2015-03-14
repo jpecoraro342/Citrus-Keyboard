@@ -1,18 +1,33 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
-public class NewBehaviourScript : MonoBehaviour {
+public class Slug : MonoBehaviour {
 	
-	char[] chars;
-	float displacement;
-	int id;
-	int displayChar;
+	public string[] chars;
+	public float displacement;
+	public int id;
+	public int displayChar;
+	public Text textbox;
 	// Use this for initialization
-	void Start (char[] chars, float displacement, int id) {
+	void Start () {
+
+
+	}
+
+	public void slugMaker(string[] chars, float x, float y, int id) {
 		this.chars = chars;
-		this.displacement = displacement;
 		this.id = id;
 		displayChar = 0;
+		
+		textbox = GetComponent<Text> ();
+		textbox.rectTransform.anchoredPosition = new Vector2 (x, y);
+		textbox.text = chars [0];
+		textbox.fontSize = 12;
+	}
+
+	void drawSlug() {
+
 	}
 	
 	//this seems redundant
