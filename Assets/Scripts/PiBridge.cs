@@ -6,8 +6,9 @@ public class PiBridge : MonoBehaviour {
 
 	public InputField InputTextArea;
 
-	int lastLeftSector;
-	int lastRightSector;
+
+	int lastLeftSector = -1;
+	int lastRightSector = -1;
 
 	float currentLeftJoystickAngle;
 	float currentRightJoystickAngle;
@@ -15,6 +16,9 @@ public class PiBridge : MonoBehaviour {
 	public Text debugText;
 
 	public Pi pi; 
+
+	public int numLeftSectors = 5;
+	public int numRightSectors = 6;
 	// Use this for initialization
 	void Start () {
 		
@@ -25,8 +29,8 @@ public class PiBridge : MonoBehaviour {
 		UpdateDebugText();
 	}
 
-	int angleToZone(float angle) {
-		int numZones = pi.numSectors;
+	int angleToZone(float angle, int numZones) {
+		//int numZones = pi.numSectors;
 		return (int)(angle + 360/(numZones*2))*numZones/360;
 	}
 
@@ -39,6 +43,7 @@ public class PiBridge : MonoBehaviour {
 		//might need to reset the lastSectors...
 		pi.resetFocus ();
 		//....
+		lastLeftSector = -1;
 	}
 
 	//right thumbstick released, add character to textbox
@@ -46,19 +51,25 @@ public class PiBridge : MonoBehaviour {
 		InputTextArea.text += pi.getChar (lastLeftSector, lastRightSector);
 
 		pi.resetFocus ();
+		lastRightSector = -1;
 	}
 
-	public void updateAngles(float left, float right) {
+	
+	public void updateLeft(float left) {
 		currentLeftJoystickAngle = left;
-		currentRightJoystickAngle = right;
-
-		if (angleToZone(left) != lastLeftSector) {
-			lastLeftSector = angleToZone(left);
-			pi.setFocusDisabled(angleToZone(left));
+		if (angleToZone(left, numLeftSectors) != lastLeftSector) {
+			lastLeftSector = angleToZone(left, numLeftSectors);
+			pi.setFocusDisabled(angleToZone(left, numLeftSectors));
 		}
-		if (angleToZone(right) != lastRightSector) {
-			lastRightSector = angleToZone(right);
-			pi.setFocusActive(angleToZone(right));
+	}
+
+	public void updateRight(float right) {
+		currentRightJoystickAngle = right;
+		
+		
+		if (angleToZone(right, numRightSectors) != lastRightSector) {
+			lastRightSector = angleToZone(right, numRightSectors);
+			pi.setFocusActive(angleToZone(right, numRightSectors));
 		}
 	}
 
