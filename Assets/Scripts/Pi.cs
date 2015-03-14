@@ -6,18 +6,56 @@ public class Pi : MonoBehaviour {
 	float radius = 4;
 	int numSlugs = 30;
 	int numSectors = 6;
+
 	public GameObject cylinder;
 	public LineRenderer lr;
 	public string stringToEdit = "Hello World";
 	//Slug[] slug;
 
+	public GameObject SlugClone;
+	string[,] charset = new string[,] {
+		{"A","a","0"},
+		{"B","b","1"},
+		{"C","c","2"},
+		{"D","d","3"},
+		{"E","e","4"},
+		{"F","f","5"},
+		{"G","g","6"},
+		{"H","h","7"},
+		{"I","i","8"},
+		{"J","j","9"},
+		{"K","k","."},
+		{"L","l",","},
+		{"M","m","?"},
+		{"N","n","!"},
+		{"O","o","\'"},
+		{"P","p","\""},
+		{"Q","q","/"},
+		{"R","r","@"},
+		{"S","s","#"},
+		{"T","t","$"},
+		{"U","u","%"},
+		{"V","v","&"},
+		{"W","w","*"},
+		{"X","x","("},
+		{"Y","y",")"},
+		{"Z","z","-"},
+		{" "," "," "},
+	};
+
 	// Use this for initialization
 	void Start () {
 		drawPi ();
 		makeSlugs ();
+<<<<<<< HEAD
 		GUIText t = gameObject.AddComponent<GUIText> ();
 		t.text = "HELLO";
 		t.transform.position = new Vector3 (0.5f, 0.5f, 0f);
+=======
+
+		//You need this in here because the canvas was doing some weird thing resetting itself
+		gameObject.transform.localPosition = new Vector3(0, 0, 0);
+>>>>>>> 73043760f2ac99657f8447da5d8dee58940a87e1
 	}
 
 	void makePi(int numSectors, int numSlugs, float radius) {
@@ -65,10 +103,17 @@ public class Pi : MonoBehaviour {
 		//for (int i = 0; i < this.numSlugs; i++) {
 			//slug[i] = new Slug();
 		//}
+		GameObject slug = (GameObject) Instantiate (SlugClone, Vector3.zero, Quaternion.identity);
+		slug.transform.parent = gameObject.transform;
+		slug.transform.localPosition = Vector3.zero;
+
+		Slug slugScript = slug.GetComponent<Slug> ();
+		slugScript.slugMaker(new string[] {"A", "a"}, 100.0f, 100.0f, 0);
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 }
