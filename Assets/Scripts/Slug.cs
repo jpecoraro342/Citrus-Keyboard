@@ -22,7 +22,7 @@ public class Slug : MonoBehaviour {
 		this.id = id;
 		displayChar = 0;
 
-		textbox.rectTransform.anchoredPosition = new Vector2 (x, y);
+		textbox.transform.position = Camera.main.WorldToScreenPoint(new Vector2 (x, y));
 		textbox.text = chars [0];
 	}
 

@@ -40,13 +40,16 @@ public class Pi : MonoBehaviour {
 		new string[] {"Y","y",")"},
 		new string[] {"Z","z","-"},
 		new string[] {" "," "," "},
+		new string[] {" "," "," "},
+		new string[] {" "," "," "},
+		new string[] {" "," "," "}
 	};
 
 	// Use this for initialization
 	void Start () {
 		drawPi ();
 		makeSlugs ();
-
+		slugs = new Slug[numSlugs];
 		//You need this in here because the canvas was doing some weird thing resetting itself
 		gameObject.transform.localPosition = new Vector3(0, 0, 0);
 	}
@@ -75,11 +78,9 @@ public class Pi : MonoBehaviour {
 		for (int i = 0, startAngle = sectorSize/2; i < 360/sectorSize -1; i++, startAngle += sectorSize) {
 			drawSector (363+(i*2),0,0,startAngle);
 		}
-		/*
 		cylinder.transform.rotation = Quaternion.AngleAxis (90, Vector3.left);
 		cylinder.transform.position = new Vector3 (0, -0.03f, 0.1f);
 		cylinder.transform.localScale = new Vector3 (radius * 2 + 0.04f, 0.1f, radius * 2 + 0.04f);
-		*/
 	}
 
 	void drawSector(int index,int centerX, int centerY, int startDegree) {
@@ -93,15 +94,35 @@ public class Pi : MonoBehaviour {
 	}
 
 	void makeSlugs() {
-		for (int i = 0; i < charset.Length; i ++) {
-
+		float sectorLength = 2*3.1415f*3;
+		Debug.Log ("Sector length: " + sectorLength);
+		float textWidth = 1;
+		Debug.Log ("text Width: " + textWidth);
+		float degInSector = 360 / numSectors;
+		float padding = sectorLength - textWidth*(numSlugs/numSectors);
+		float paddingDeg = ((padding/sectorLength) * degInSector)/((numSlugs/numSectors) + 1);
+		float textDeg = (textWidth/sectorLength)* degInSector;
+		float insertTextAtDeg = degInSector / -2 + textDeg;// + paddingDeg;
+		Debug.Log("padding Deg: " + paddingDeg);
+		Debug.Log("insertTextAtDeg: " + insertTextAtDeg);
+		for (int i = 0, sector = 0, counter = 1; i < charset.Length; i ++, counter++) {
+			if (counter > numSlugs/numSectors) {
+				sector++;
+				counter = 1;
+insertTextAtDeg = degInSector / -2 + textDeg;// + paddingDeg) + sector*degInSector + textDeg;
+				Debug.Log("New sector and insert Text at deg: "+ insertTextAtDeg);
+			}
 			GameObject slug = (GameObject)Instantiate (SlugClone, Vector3.zero, Quaternion.identity);
 			slug.transform.parent = gameObject.transform;
 			slug.transform.localPosition = Vector3.zero;
 
+			float x = Mathf.Sin (Mathf.Deg2Rad * insertTextAtDeg) * (radius + 0.4f);
+			float y = Mathf.Cos (Mathf.Deg2Rad * insertTextAtDeg) * (radius + 0.4f);
+			insertTextAtDeg += paddingDeg + textDeg;
+
 			Slug slugScript = slug.GetComponent<Slug> ();
-			slugScript.slugMaker (new string[] {"A", "a"}, 100.0f, 100.0f, 0);
-			slugs[i] = slugScript;
+			slugScript.slugMaker (new string[] {"A", "a"}, x, y, 0);
+			//slugs[i] = slugScript;
 		}
 
 	}
@@ -110,7 +131,7 @@ public class Pi : MonoBehaviour {
 	void setFocus(int sector) {
 		for (int i = 0; i < charset.Length; i++) {
 			if (i % 6 != 0) {
-				slugs[i].setFocus(1); //1 is grayed
+				//slugs[i].setFocus(1); //1 is grayed
 			}
 		}
 	}
