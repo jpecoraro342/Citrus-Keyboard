@@ -9,6 +9,9 @@ public class PiBridge : MonoBehaviour {
 	int lastLeftSector;
 	int lastRightSector;
 
+	float currentLeftJoystickAngle;
+	float currentRightJoystickAngle;
+
 	public Text debugText;
 
 	public Pi pi; 
@@ -19,7 +22,7 @@ public class PiBridge : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		UpdateDebugText();
 	}
 
 	int angleToZone(float angle) {
@@ -43,12 +46,11 @@ public class PiBridge : MonoBehaviour {
 		InputTextArea.text += pi.getChar (lastLeftSector, lastRightSector);
 
 		pi.resetFocus ();
-
-		Debug.Log ("left: " + lastLeftSector + " right: " + lastRightSector);
 	}
 
 	public void updateAngles(float left, float right) {
-		//debugText.txt = 
+		currentLeftJoystickAngle = left;
+		currentRightJoystickAngle = right;
 
 		if (angleToZone(left) != lastLeftSector) {
 			lastLeftSector = angleToZone(left);
@@ -58,5 +60,10 @@ public class PiBridge : MonoBehaviour {
 			lastRightSector = angleToZone(right);
 			pi.setFocusActive(angleToZone(right));
 		}
+	}
+
+	void UpdateDebugText() {
+		debugText.text = "Left Joystick:\n\tAngle: " + currentLeftJoystickAngle + "\n\tSector: " + lastLeftSector;
+		debugText.text += "\nRight Joystick:\n\tAngle: " + currentRightJoystickAngle + "\n\tSector: " + lastRightSector;
 	}
 }
