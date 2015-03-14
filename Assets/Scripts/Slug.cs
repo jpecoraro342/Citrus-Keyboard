@@ -9,6 +9,7 @@ public class Slug : MonoBehaviour {
 	public int id;
 	public int displayChar;
 	public Text textbox;
+
 	// Use this for initialization
 	void Start () {
 
@@ -19,8 +20,7 @@ public class Slug : MonoBehaviour {
 		this.chars = chars;
 		this.id = id;
 		displayChar = 0;
-		
-		textbox = GetComponent<Text> ();
+
 		textbox.rectTransform.anchoredPosition = new Vector2 (x, y);
 		textbox.text = chars [0];
 		textbox.fontSize = 12;

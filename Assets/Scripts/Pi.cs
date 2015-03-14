@@ -9,6 +9,36 @@ public class Pi : MonoBehaviour {
 	//Slug[] slug;
 	LineRenderer lr;
 
+	public GameObject SlugClone;
+	string[,] charset = new string[,] {
+		{"A","a","0"},
+		{"B","b","1"},
+		{"C","c","2"},
+		{"D","d","3"},
+		{"E","e","4"},
+		{"F","f","5"},
+		{"G","g","6"},
+		{"H","h","7"},
+		{"I","i","8"},
+		{"J","j","9"},
+		{"K","k","."},
+		{"L","l",","},
+		{"M","m","?"},
+		{"N","n","!"},
+		{"O","o","\'"},
+		{"P","p","\""},
+		{"Q","q","/"},
+		{"R","r","@"},
+		{"S","s","#"},
+		{"T","t","$"},
+		{"U","u","%"},
+		{"V","v","&"},
+		{"W","w","*"},
+		{"X","x","("},
+		{"Y","y",")"},
+		{"Z","z","-"},
+		{" "," "," "},
+	};
 	// Use this for initialization
 	void Start () {
 		this.numSectors = 6;
@@ -55,6 +85,11 @@ public class Pi : MonoBehaviour {
 		//for (int i = 0; i < this.numSlugs; i++) {
 			//slug[i] = new Slug();
 		//}
+		GameObject slug = (GameObject) Instantiate (SlugClone, Vector3.zero, Quaternion.identity);
+		Slug slugScript = slug.GetComponent<Slug> ();
+
+		slugScript.slugMaker(new string[] {"A", "a"}, 100.0f, 100.0f, 0);
+
 	}
 	
 	// Update is called once per frame
