@@ -10,7 +10,7 @@ public class Pi : MonoBehaviour {
 
 	public GameObject cylinder;
 	public LineRenderer lr;
-	Slug[] slugs;
+	public Slug[] slugs;
 
 	public GameObject SlugClone;
 	string[][] charset = new string[][] {
@@ -126,6 +126,7 @@ public class Pi : MonoBehaviour {
 
 			Slug slugScript = slug.GetComponent<Slug> ();
 			slugScript.slugMaker (charset[i], x+0.12f, y-0.01f, 0);
+			slugs[i] = slugScript;
 		}
 
 	}
@@ -151,9 +152,13 @@ public class Pi : MonoBehaviour {
 			}
 		}
 	}
+
+	void setKeyboard(int keyboard) {
+		for (int i = 0; i < charset.Length; i++) {
+			slugs[i].setChar(keyboard);
+		}
+	}
 	
-
-
 	// Update is called once per frame
 	void Update () {
 

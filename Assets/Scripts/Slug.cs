@@ -37,8 +37,11 @@ public class Slug : MonoBehaviour {
 	}
 	
 	//this seems redundant
-	void changeChar(int i) {
-		displayChar = i;
+	void setChar(int i) {
+		if (i != displayChar) {
+			textbox.text = chars [i];
+			displayChar = i;
+		}
 	}
 
 	public void setFocus(int focus) {
@@ -56,11 +59,13 @@ public class Slug : MonoBehaviour {
 				outline.enabled = false;
 				shadow.enabled = false;
 				break;
-			case (int) focusStates.ACTIVE :
+			case (int) focusStates.FOCUS :
 				textbox.color = highlightedColor;
 				outline.enabled = true;
 				shadow.enabled = true;
+				break;
 			}
+			this.focus = focus;
 		}
 
 	}
