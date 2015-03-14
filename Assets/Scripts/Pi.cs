@@ -12,6 +12,7 @@ public class Pi : MonoBehaviour {
 	public LineRenderer lr;
 	public Slug[] slugs;
 
+
 	public GameObject SlugClone;
 	string[][] charset = new string[][] {
 		new string[] {"A","a","0"}, //0 0 
@@ -48,9 +49,9 @@ public class Pi : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		slugs = new Slug[numSlugs];
 		drawPi ();
 		makeSlugs ();
-		slugs = new Slug[numSlugs];
 		//You need this in here because the canvas was doing some weird thing resetting itself
 		gameObject.transform.localPosition = new Vector3(0, 0, 0);
 	}
@@ -107,14 +108,14 @@ public class Pi : MonoBehaviour {
 		float insertTextAtDeg = degInSector / -2 + textDeg + paddingDeg - (extraPadding*((numSlugs/numSectors)))/2;
 		Debug.Log("padding Deg: " + paddingDeg);
 		Debug.Log("insertTextAtDeg: " + insertTextAtDeg);
-		for (int i = 0, sector = 0, counter = 1; i < charset.Length; i ++, counter++) {
-			if (counter > numSlugs/numSectors) {
-				sector++;
-				counter = 1;
-				insertTextAtDeg = (degInSector / -2 + textDeg + paddingDeg - (extraPadding*((numSlugs/numSectors)))/2) + sector*degInSector;
+		for (int i = 0, rightSector = 0, leftSector = 0; i < charset.Length; i ++, leftSector++) {
+			if (leftSector >= numSlugs/numSectors) {
+				rightSector++;
+				leftSector = 0;
+				//this gives sectors padding
+				insertTextAtDeg = (degInSector / -2 + textDeg + paddingDeg - (extraPadding*((numSlugs/numSectors)))/2) + rightSector*degInSector;
 				Debug.Log("New sector and insert Text at deg: "+ insertTextAtDeg);
 			}
-
 			GameObject slug = (GameObject)Instantiate (SlugClone, Vector3.zero, Quaternion.identity);
 			slug.transform.parent = gameObject.transform;
 			slug.transform.localPosition = Vector3.zero;
@@ -125,16 +126,16 @@ public class Pi : MonoBehaviour {
 			insertTextAtDeg += paddingDeg + textDeg;
 
 			Slug slugScript = slug.GetComponent<Slug> ();
-			slugScript.slugMaker (charset[i], x+0.12f, y-0.01f, 0);
+			slugScript.slugMaker (charset[i], x+0.12f, y-0.01f, i, leftSector, rightSector);
 			slugs[i] = slugScript;
 		}
 
 	}
 
 	//sector is the sector selected on the <LEFT> thumbstick
-	void setFocusDisabled(int sector) {
+	public void setFocusDisabled(int sector) {
 		for (int i = 0; i < charset.Length; i++) {
-			if (slugs[i].sector != sector) {
+			if (slugs[i].lefthandSector != sector) {
 				slugs[i].setFocus((int)focusStates.DISABLED); 
 			} else {
 				slugs[i].setFocus ((int)focusStates.DEFAULT);
@@ -145,18 +146,34 @@ public class Pi : MonoBehaviour {
 	//sector is the sector selected by the <RIGHT> thumbstick
 	//sector is the sector selected by the <RIGHT> thumbstick
 	//sector is the sector selected by the <RIGHT> thumbstick
-	void setFocusActive(int sector) {
+	public void setFocusActive(int sector) {
 		for (int i = 0; i < charset.Length; i++) {
-			if (slugs[i].sector == sector) {
+			if (slugs[i].righthandSector == sector) {
 				slugs[i].setFocus((int)focusStates.FOCUS); 
 			}
 		}
 	}
 
-	void setKeyboard(int keyboard) {
+	public void resetFocus() {
 		for (int i = 0; i < charset.Length; i++) {
-			slugs[i].setChar(keyboard);
+			slugs[i].setFocus((int)focusStates.DEFAULT); 
 		}
+	}
+
+	public void setKeyboard(KeyboardType keyboard) {
+		for (int i = 0; i < charset.Length; i++) {
+			slugs[i].setChar((int) keyboard);
+		}
+	}
+
+	public string getChar(int left, int right) {
+		for (int i = 0; i < charset.Length; i++) {
+			if (slugs[i].lefthandSector == left && slugs[i].righthandSector == right) {
+				return slugs[i].activeChar;
+			} 
+		}
+		return "WTF";
+
 	}
 	
 	// Update is called once per frame
