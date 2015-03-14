@@ -10,7 +10,8 @@ public class Pi : MonoBehaviour {
 
 	public GameObject cylinder;
 	public LineRenderer lr;
-	Slug[] slugs;
+	public Slug[] slugs;
+
 
 	public GameObject SlugClone;
 	string[][] charset = new string[][] {
@@ -41,13 +42,16 @@ public class Pi : MonoBehaviour {
 		new string[] {"Y","y",")"},
 		new string[] {"Z","z","-"},
 		new string[] {" "," "," "},
+		new string[] {" "," "," "},
+		new string[] {" "," "," "},
+		new string[] {" "," "," "}
 	};
 
 	// Use this for initialization
 	void Start () {
+		slugs = new Slug[numSlugs];
 		drawPi ();
 		makeSlugs ();
-
 		//You need this in here because the canvas was doing some weird thing resetting itself
 		gameObject.transform.localPosition = new Vector3(0, 0, 0);
 	}
@@ -76,7 +80,6 @@ public class Pi : MonoBehaviour {
 		for (int i = 0, startAngle = sectorSize/2; i < 360/sectorSize -1; i++, startAngle += sectorSize) {
 			drawSector (363+(i*2),0,0,startAngle);
 		}
-
 		cylinder.transform.rotation = Quaternion.AngleAxis (90, Vector3.left);
 		cylinder.transform.position = new Vector3 (0, -0.03f, 0.1f);
 		cylinder.transform.localScale = new Vector3 (radius * 2 + 0.04f, 0.1f, radius * 2 + 0.04f);
@@ -93,24 +96,46 @@ public class Pi : MonoBehaviour {
 	}
 
 	void makeSlugs() {
-		int sector = 0;
-		for (int i = 0; i < charset.Length; i ++) {
-
+		float sectorLength = 2*3.1415f*3;
+		float extraPadding = 1;
+		Debug.Log ("Sector length: " + sectorLength);
+		float textWidth = 1f;
+		Debug.Log ("text Width: " + textWidth);
+		float degInSector = 360 / numSectors;
+		float padding = sectorLength - textWidth*(numSlugs/numSectors);
+		float paddingDeg = ((padding/sectorLength) * degInSector)/((numSlugs/numSectors) + 1) + extraPadding;
+		float textDeg = (textWidth/sectorLength)* degInSector;
+		float insertTextAtDeg = degInSector / -2 + textDeg + paddingDeg - (extraPadding*((numSlugs/numSectors)))/2;
+		Debug.Log("padding Deg: " + paddingDeg);
+		Debug.Log("insertTextAtDeg: " + insertTextAtDeg);
+		for (int i = 0, rightSector = 0, leftSector = 0; i < charset.Length; i ++, leftSector++) {
+			if (leftSector >= numSlugs/numSectors) {
+				rightSector++;
+				leftSector = 0;
+				//this gives sectors padding
+				insertTextAtDeg = (degInSector / -2 + textDeg + paddingDeg - (extraPadding*((numSlugs/numSectors)))/2) + rightSector*degInSector;
+				Debug.Log("New sector and insert Text at deg: "+ insertTextAtDeg);
+			}
 			GameObject slug = (GameObject)Instantiate (SlugClone, Vector3.zero, Quaternion.identity);
 			slug.transform.parent = gameObject.transform;
 			slug.transform.localPosition = Vector3.zero;
 
+			insertTextAtDeg -= 0.7f;
+			float x = Mathf.Sin (Mathf.Deg2Rad * insertTextAtDeg) * (radius + 0.4f);
+			float y = Mathf.Cos (Mathf.Deg2Rad * insertTextAtDeg) * (radius + 0.4f);
+			insertTextAtDeg += paddingDeg + textDeg;
+
 			Slug slugScript = slug.GetComponent<Slug> ();
-			slugScript.slugMaker (new string[] {"A", "a"}, 100.0f, 100.0f, 0, sector++);
+			slugScript.slugMaker (charset[i], x+0.12f, y-0.01f, i, leftSector, rightSector);
 			slugs[i] = slugScript;
 		}
 
 	}
 
 	//sector is the sector selected on the <LEFT> thumbstick
-	void setFocusDisabled(int sector) {
+	public void setFocusDisabled(int sector) {
 		for (int i = 0; i < charset.Length; i++) {
-			if (slugs[i].sector != sector) {
+			if (slugs[i].lefthandSector != sector) {
 				slugs[i].setFocus((int)focusStates.DISABLED); 
 			} else {
 				slugs[i].setFocus ((int)focusStates.DEFAULT);
@@ -121,16 +146,36 @@ public class Pi : MonoBehaviour {
 	//sector is the sector selected by the <RIGHT> thumbstick
 	//sector is the sector selected by the <RIGHT> thumbstick
 	//sector is the sector selected by the <RIGHT> thumbstick
-	void setFocusActive(int sector) {
+	public void setFocusActive(int sector) {
 		for (int i = 0; i < charset.Length; i++) {
-			if (slugs[i].sector == sector) {
+			if (slugs[i].righthandSector == sector) {
 				slugs[i].setFocus((int)focusStates.FOCUS); 
 			}
 		}
 	}
+
+	public void resetFocus() {
+		for (int i = 0; i < charset.Length; i++) {
+			slugs[i].setFocus((int)focusStates.DEFAULT); 
+		}
+	}
+
+	public void setKeyboard(KeyboardType keyboard) {
+		for (int i = 0; i < charset.Length; i++) {
+			slugs[i].setChar((int) keyboard);
+		}
+	}
+
+	public string getChar(int left, int right) {
+		for (int i = 0; i < charset.Length; i++) {
+			if (slugs[i].lefthandSector == left && slugs[i].righthandSector == right) {
+				return slugs[i].activeChar;
+			} 
+		}
+		return "WTF";
+
+	}
 	
-
-
 	// Update is called once per frame
 	void Update () {
 

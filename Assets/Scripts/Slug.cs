@@ -11,25 +11,27 @@ public class Slug : MonoBehaviour {
 	public int displayChar;
 	public Text textbox;
 	public int focus = 0;
-	public int sector;
-
+	//public int sector;
+	public string activeChar;
 	public Color defaultColor = new Color(160/255.0f, 160/255.0f, 160/255.0f);
 	public Color fadedColor = new Color(160/255.0f, 160/255.0f, 160/255.0f, 175/255.0f);
 	public Color highlightedColor = new Color(80/255.0f, 80/255.0f, 80/255.0f);
-
+	public int lefthandSector;
+	public int righthandSector;
 	// Use this for initialization
 	void Start () {
 
 
 	}
 
-	public void slugMaker(string[] chars, float x, float y, int id, int sector) {
+	public void slugMaker(string[] chars, float x, float y, int id, int left, int right) {
 		this.chars = chars;
 		this.id = id;
-		this.sector = sector;
+		this.lefthandSector = left;
+		this.righthandSector = right;
 		displayChar = 0;
-
-		textbox.rectTransform.anchoredPosition = new Vector2 (x, y);
+		activeChar = chars [displayChar];
+		textbox.transform.position = Camera.main.WorldToScreenPoint(new Vector2 (x, y));
 		textbox.text = chars [0];
 	}
 
@@ -38,8 +40,12 @@ public class Slug : MonoBehaviour {
 	}
 	
 	//this seems redundant
-	void changeChar(int i) {
-		displayChar = i;
+	public void setChar(int i) {
+		if (i != displayChar) {
+			textbox.text = chars [i];
+			activeChar = chars[i];
+			displayChar = i;
+		}
 	}
 
 	public void setFocus(int focus) {
@@ -65,6 +71,7 @@ public class Slug : MonoBehaviour {
 			default:
 				break;
 			}
+			this.focus = focus;
 		}
 	}
 
