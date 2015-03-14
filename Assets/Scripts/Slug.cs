@@ -32,6 +32,7 @@ public class Slug : MonoBehaviour {
 		activeChar = chars [displayChar];
 		textbox.transform.position = Camera.main.WorldToScreenPoint(new Vector2 (x, y));
 		textbox.text = chars [0];
+		textbox.alignment = TextAnchor.MiddleCenter;
 	}
 
 	void drawSlug() {

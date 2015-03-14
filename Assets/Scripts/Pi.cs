@@ -121,12 +121,12 @@ public class Pi : MonoBehaviour {
 			slug.transform.localPosition = Vector3.zero;
 
 			insertTextAtDeg -= 0.7f;
-			float x = Mathf.Sin (Mathf.Deg2Rad * insertTextAtDeg) * (radius + 0.4f);
-			float y = Mathf.Cos (Mathf.Deg2Rad * insertTextAtDeg) * (radius + 0.4f);
+			float x = Mathf.Sin (Mathf.Deg2Rad * insertTextAtDeg) * (radius + 0.5f);
+			float y = Mathf.Cos (Mathf.Deg2Rad * insertTextAtDeg) * (radius + 0.5f);
 			insertTextAtDeg += paddingDeg + textDeg;
 
 			Slug slugScript = slug.GetComponent<Slug> ();
-			slugScript.slugMaker (charset[i], x+0.12f, y-0.01f, i, leftSector, rightSector);
+			slugScript.slugMaker (charset[i], x, y, i, leftSector, rightSector);
 			slugs[i] = slugScript;
 		}
 
