@@ -2,6 +2,13 @@
 using UnityEngine.UI;
 using System.Collections;
 
+public enum KeyboardType {
+	LOWERCASE,
+	CAPITAL,
+	NUMBERS,
+	SYMBOLS
+}
+
 public class ControllerInput : MonoBehaviour {
 	public float VisualJoystickMagnitude = 30;
 	public float JoystickSmoothing = 20;
@@ -10,8 +17,6 @@ public class ControllerInput : MonoBehaviour {
 
 	public Image LeftJoystick;
 	public Image RightJoystick;
-
-	public Text DebugText;
 
 	private static string LeftTrigger = "LeftTrigger";
 	private static string RightTrigger = "RightTrigger";
@@ -24,6 +29,9 @@ public class ControllerInput : MonoBehaviour {
 
 	bool LeftJoystickCentered;
 	bool RightJoystickCentered;
+
+	bool LeftTriggerPressed;
+	bool RightTriggerPressed;
 	
 	void Start() {
 	
@@ -40,6 +48,7 @@ public class ControllerInput : MonoBehaviour {
 		RightInput = new Vector2(rightX, rightY);
 
 		CheckJoystickSelections();
+		UpdateKeyboard();
 		UpdateJoystickPositions();
 		UpdateDebugText();
 	}
@@ -52,6 +61,45 @@ public class ControllerInput : MonoBehaviour {
 		RightJoystick.rectTransform.anchoredPosition = Vector2.Lerp(RightJoystick.rectTransform.anchoredPosition, RightPosition, JoystickSmoothing * Time.deltaTime);
 	}
 
+	//Update Keyboard
+	void UpdateKeyboard() {
+		bool DidPressLeftTrigger = Input.GetButton(LeftTrigger);
+		bool DidPressRightTrigger = Input.GetButton(RightTrigger);
+
+		if (DidPressLeftTrigger && !LeftTriggerPressed) {
+			LeftTriggerPressed = true;
+			ChangeKeyboard(KeyboardType.NUMBERS);
+		}
+
+		if (DidPressRightTrigger && !RightTriggerPressed) {
+			RightTriggerPressed = true;
+			ChangeKeyboard(KeyboardType.CAPITAL);
+		}
+
+		if (!DidPressLeftTrigger && LeftTriggerPressed) {
+			LeftTriggerPressed = false;
+			if (RightTriggerPressed) {
+				ChangeKeyboard(KeyboardType.CAPITAL);
+			}
+			else {
+				ChangeKeyboard(KeyboardType.LOWERCASE);
+			}
+		}
+		
+		if (!DidPressRightTrigger && RightTriggerPressed) {
+			RightTriggerPressed = false;
+			if (LeftTriggerPressed) {
+				ChangeKeyboard(KeyboardType.NUMBERS);
+			}
+			else {
+				ChangeKeyboard(KeyboardType.LOWERCASE);
+			}
+		}
+	}
+
+	void ChangeKeyboard(KeyboardType Keyboard) {
+		//TODO: call change keyboard on manager
+	}
 
 	//Check to See if the Left Joystick selected "Cancel" and the Right Joystick "Selected the Character"
 	void CheckJoystickSelections() {
@@ -105,10 +153,7 @@ public class ControllerInput : MonoBehaviour {
 
 	//Debugging
 	void UpdateDebugText() {
-		float leftJoystickAngle = getVectorAngle(LeftInput);
-		float rightJoystickAngle = getVectorAngle(RightInput);
 
-		DebugText.text = "Left Joystick: " + LeftInput + "\nAngle: " + leftJoystickAngle + "\n\nRight Joystick: " + RightInput + "\nAngle: " + rightJoystickAngle;
 	}
 
 	//Math Methods
