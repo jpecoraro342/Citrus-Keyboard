@@ -9,6 +9,9 @@ public class ControllerInput : MonoBehaviour {
 
 	public Text DebugText;
 
+	private float VisualJoystickMagnitude = 30;
+	private float JoystickSmoothing = 20;
+
 	private static string LeftTrigger = "LeftTrigger";
 	private static string RightTrigger = "RightTrigger";
 
@@ -18,11 +21,11 @@ public class ControllerInput : MonoBehaviour {
 	Vector2 LeftInput;
 	Vector2 RightInput;
 	
-	void Start () {
+	void Start() {
 	
 	}
 
-	void Update () {
+	void Update() {
 		float leftX = Input.GetAxisRaw("Horizontal");
 		float leftY = Input.GetAxisRaw("Vertical");
 
@@ -32,10 +35,19 @@ public class ControllerInput : MonoBehaviour {
 		LeftInput = new Vector2(leftX, leftY);
 		RightInput = new Vector2(rightX, rightY);
 
+		UpdateJoystickPositions();
 		UpdateDebugText();
 	}
 
-	void UpdateDebugText () {
+	void UpdateJoystickPositions() {
+		Vector2 LeftPosition = LeftInput.normalized * VisualJoystickMagnitude;
+		Vector2 RightPosition = RightInput.normalized * VisualJoystickMagnitude;
+
+		LeftJoystick.rectTransform.anchoredPosition = Vector2.Lerp(LeftJoystick.rectTransform.anchoredPosition, LeftPosition, JoystickSmoothing * Time.deltaTime);
+		RightJoystick.rectTransform.anchoredPosition = Vector2.Lerp(RightJoystick.rectTransform.anchoredPosition, RightPosition, JoystickSmoothing * Time.deltaTime);
+	}
+
+	void UpdateDebugText() {
 		float leftJoystickAngle = getVectorAngle(LeftInput);
 		float rightJoystickAngle = getVectorAngle(RightInput);
 
