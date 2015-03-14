@@ -6,7 +6,7 @@ public class Pi : MonoBehaviour {
 	enum focusStates { DEFAULT, FOCUS, DISABLED };
 	float radius = 4;
 	int numSlugs = 30;
-	int numSectors = 6;
+	public int numSectors = 6;
 
 	public GameObject cylinder;
 	public LineRenderer lr;

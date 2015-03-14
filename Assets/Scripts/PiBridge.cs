@@ -9,6 +9,8 @@ public class PiBridge : MonoBehaviour {
 	int lastLeftSector;
 	int lastRightSector;
 
+	public Text debugText;
+
 	public Pi pi; 
 	// Use this for initialization
 	void Start () {
@@ -20,7 +22,8 @@ public class PiBridge : MonoBehaviour {
 	
 	}
 
-	int angleToZone(int angle, int numZones) {
+	int angleToZone(float angle) {
+		int numZones = pi.numSectors;
 		return (int)(angle + 360/(numZones*2))*numZones/360;
 	}
 
@@ -40,16 +43,20 @@ public class PiBridge : MonoBehaviour {
 		InputTextArea.text += pi.getChar (lastLeftSector, lastRightSector);
 
 		pi.resetFocus ();
+
+		Debug.Log ("left: " + lastLeftSector + " right: " + lastRightSector);
 	}
 
 	public void updateAngles(float left, float right) {
-		if ((int)left != lastLeftSector) {
-			lastLeftSector = (int)left;
-			pi.setFocusDisabled((int)left);
+		//debugText.txt = 
+
+		if (angleToZone(left) != lastLeftSector) {
+			lastLeftSector = angleToZone(left);
+			pi.setFocusDisabled(angleToZone(left));
 		}
-		if ((int)right != lastRightSector) {
-			lastRightSector = (int)right;
-			pi.setFocusActive((int)right);
+		if (angleToZone(right) != lastRightSector) {
+			lastRightSector = angleToZone(right);
+			pi.setFocusActive(angleToZone(right));
 		}
 	}
 }
