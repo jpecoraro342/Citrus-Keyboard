@@ -18,8 +18,6 @@ public class ControllerInput : MonoBehaviour {
 	public Image LeftJoystick;
 	public Image RightJoystick;
 
-	public Text DebugText;
-
 	private static string LeftTrigger = "LeftTrigger";
 	private static string RightTrigger = "RightTrigger";
 
@@ -155,10 +153,7 @@ public class ControllerInput : MonoBehaviour {
 
 	//Debugging
 	void UpdateDebugText() {
-		float leftJoystickAngle = getVectorAngle(LeftInput);
-		float rightJoystickAngle = getVectorAngle(RightInput);
 
-		DebugText.text = "Left Joystick: " + LeftInput + "\nAngle: " + leftJoystickAngle + "\n\nRight Joystick: " + RightInput + "\nAngle: " + rightJoystickAngle;
 	}
 
 	//Math Methods
