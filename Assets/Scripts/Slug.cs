@@ -23,7 +23,6 @@ public class Slug : MonoBehaviour {
 
 		textbox.rectTransform.anchoredPosition = new Vector2 (x, y);
 		textbox.text = chars [0];
-		textbox.fontSize = 12;
 	}
 
 	void drawSlug() {

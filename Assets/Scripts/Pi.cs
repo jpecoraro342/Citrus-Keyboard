@@ -39,15 +39,18 @@ public class Pi : MonoBehaviour {
 		{"Z","z","-"},
 		{" "," "," "},
 	};
+
 	// Use this for initialization
 	void Start () {
 		this.numSectors = 6;
 		lr = gameObject.AddComponent<LineRenderer> ();
 		lr.transform.position = new Vector3 (0,4,0);
+
 		drawPi ();
 		makeSlugs ();
-		//Slug s1 = new Slug (new char['A','a','?'],4,0);
-		//Slug s2 = new Slug (new char['B','b','?'],4,0);
+
+		//You need this in here because the canvas was doing some weird thing resetting itself
+		gameObject.transform.localPosition = new Vector3(0, 0, 0);
 	}
 
 	void drawPi() {
@@ -86,6 +89,8 @@ public class Pi : MonoBehaviour {
 			//slug[i] = new Slug();
 		//}
 		GameObject slug = (GameObject) Instantiate (SlugClone, Vector3.zero, Quaternion.identity);
+		slug.transform.parent = gameObject.transform;
+
 		Slug slugScript = slug.GetComponent<Slug> ();
 
 		slugScript.slugMaker(new string[] {"A", "a"}, 100.0f, 100.0f, 0);
@@ -94,6 +99,6 @@ public class Pi : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 }
