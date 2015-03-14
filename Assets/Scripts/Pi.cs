@@ -40,7 +40,7 @@ public class Pi : MonoBehaviour {
 		new string[] {"X","x","("},
 		new string[] {"Y","y",")"},
 		new string[] {"Z","z","-"},
-		new string[] {"\u2423"," "," "},
+		new string[] {"\u2423","\u2423 ","\u2423"},
 		new string[] {" "," "," "},
 		new string[] {" "," "," "},
 		new string[] {" "," "," "}
@@ -117,8 +117,8 @@ public class Pi : MonoBehaviour {
 			slug.transform.localPosition = Vector3.zero;
 
 			insertTextAtDeg -= 0.7f;
-			float x = Mathf.Sin (Mathf.Deg2Rad * insertTextAtDeg) * (radius + 0.5f);
-			float y = Mathf.Cos (Mathf.Deg2Rad * insertTextAtDeg) * (radius + 0.5f);
+			float x = Mathf.Sin (Mathf.Deg2Rad * insertTextAtDeg) * (radius + 0.6f);
+			float y = Mathf.Cos (Mathf.Deg2Rad * insertTextAtDeg) * (radius + 0.6f);
 			insertTextAtDeg += paddingDeg + textDeg;
 
 			Slug slugScript = slug.GetComponent<Slug> ();
