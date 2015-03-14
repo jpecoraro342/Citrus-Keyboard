@@ -49,8 +49,9 @@ public class ControllerInput : MonoBehaviour {
 		LeftInput = new Vector2(leftX, leftY);
 		RightInput = new Vector2(rightX, rightY);
 
-		UpdateManagerAngles();
+		//check joystick must go first.
 		CheckJoystickSelections();
+		UpdateManagerAngles();
 		UpdateKeyboard();
 		UpdateJoystickPositions();
 	}
