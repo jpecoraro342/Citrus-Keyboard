@@ -7,8 +7,7 @@ public class Pi : MonoBehaviour {
 	float radius = 4;
 	int numSlugs = 30;
 	public int numSectors = 6;
-
-	public GameObject cylinder;
+	
 	public LineRenderer lr;
 	public Slug[] slugs;
 
@@ -80,9 +79,6 @@ public class Pi : MonoBehaviour {
 		for (int i = 0, startAngle = sectorSize/2; i < 360/sectorSize -1; i++, startAngle += sectorSize) {
 			drawSector (363+(i*2),0,0,startAngle);
 		}
-		cylinder.transform.rotation = Quaternion.AngleAxis (90, Vector3.left);
-		cylinder.transform.position = new Vector3 (0, -0.03f, 0.1f);
-		cylinder.transform.localScale = new Vector3 (radius * 2 + 0.04f, 0.1f, radius * 2 + 0.04f);
 	}
 
 	void drawSector(int index,int centerX, int centerY, int startDegree) {
