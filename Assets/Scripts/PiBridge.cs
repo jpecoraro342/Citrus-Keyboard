@@ -81,6 +81,7 @@ public class PiBridge : MonoBehaviour {
 			string input = pi.getChar (lastLeftSector, lastRightSector);
 			InputTextArea.text += input;
 			pi.resetFocus ();
+			pi.setFocusDisabled(lastLeftSector);
 
 			lastTwoChars[0] = lastTwoChars[1];
 			lastTwoChars[1] = input;
