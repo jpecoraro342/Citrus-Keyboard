@@ -32,10 +32,6 @@ public class Slug : MonoBehaviour {
 		displayChar = 0;
 		activeChar = chars [displayChar];
 		textbox.transform.position = Camera.main.WorldToScreenPoint(new Vector2 (x, y));
-		string c = chars [0];
-		if (c == "\u2423") {
-			c = " ";
-		}
 		textbox.text = chars [0];
 		textbox.alignment = TextAnchor.MiddleCenter;
 	}

@@ -40,10 +40,10 @@ public class Pi : MonoBehaviour {
 		new string[] {"X","x","("},
 		new string[] {"Y","y",")"},
 		new string[] {"Z","z","-"},
-		new string[] {"\u2423","\u2423 ","\u2423"},
-		new string[] {"\u2423","\u2423 ","\u2423"},
-		new string[] {"\u2423","\u2423 ","\u2423"},
-		new string[] {"\u2423","\u2423 ","\u2423"}
+		new string[] {"\u2423","\u2423","\u2423"},
+		new string[] {"\u2423","\u2423","\u2423"},
+		new string[] {"\u2423","\u2423","\u2423"},
+		new string[] {"\u2423","\u2423","\u2423"}
 		//new string[] {" "," "," "},
 		//new string[] {" "," "," "},
 		//new string[] {" "," "," "}
@@ -172,7 +172,11 @@ public class Pi : MonoBehaviour {
 	public string getChar(int left, int right) {
 		for (int i = 0; i < charset.Length; i++) {
 			if (slugs[i].lefthandSector == left && slugs[i].righthandSector == right) {
-				return slugs[i].activeChar;
+				string activeChar = slugs[i].activeChar;
+				if (activeChar == "\u2423") {
+					activeChar = " ";
+				}
+				return activeChar;
 			} 
 		}
 		return "WTF";
