@@ -132,6 +132,7 @@ public class Pi : MonoBehaviour {
 
 	}
 
+	//todo: move these terrible crap focus functions to pibridge
 	//sector is the sector selected on the <LEFT> thumbstick
 	public void setFocusDisabled(int sector) {
 		for (int i = 0; i < charset.Length; i++) {
@@ -146,11 +147,14 @@ public class Pi : MonoBehaviour {
 	//sector is the sector selected by the <RIGHT> thumbstick
 	//sector is the sector selected by the <RIGHT> thumbstick
 	//sector is the sector selected by the <RIGHT> thumbstick
-	public void setFocusActive(int sector) {
+	public void setFocusActive(int leftSector, int rightSector) {
 		for (int i = 0; i < charset.Length; i++) {
-			if (slugs[i].righthandSector == sector) {
+			if (slugs[i].righthandSector == rightSector && slugs[i].lefthandSector == leftSector) {
 				slugs[i].setFocus((int)focusStates.SELECTED); 
+			} else if (slugs[i].focus != (int) focusStates.DISABLED) {
+				slugs[i].setFocus((int)focusStates.FOCUS);
 			}
+
 		}
 	}
 
@@ -169,7 +173,7 @@ public class Pi : MonoBehaviour {
 	public string getChar(int left, int right) {
 		for (int i = 0; i < charset.Length; i++) {
 			if (slugs[i].lefthandSector == left && slugs[i].righthandSector == right) {
-				return slugs[i].activeChar;
+				return slugs[i].activeChar + i;
 			} 
 		}
 		return "WTF";
