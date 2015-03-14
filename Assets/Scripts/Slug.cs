@@ -9,6 +9,7 @@ public class Slug : MonoBehaviour {
 	public int id;
 	public int displayChar;
 	public Text textbox;
+	public int focus = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -33,7 +34,11 @@ public class Slug : MonoBehaviour {
 	void changeChar(int i) {
 		displayChar = i;
 	}
-	
+
+	public void setFocus(int sector) {
+
+	}
+
 	// Update is called once per frame
 	void Update () {
 		
