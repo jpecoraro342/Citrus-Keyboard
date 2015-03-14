@@ -16,6 +16,10 @@ public class Slug : MonoBehaviour {
 	public Color defaultColor = new Color(160/255.0f, 160/255.0f, 160/255.0f);
 	public Color fadedColor = new Color(160/255.0f, 160/255.0f, 160/255.0f, 175/255.0f);
 	public Color highlightedColor = new Color(80/255.0f, 80/255.0f, 80/255.0f);
+
+	public Color lightHighlight = new Color(245/255.0f, 245/255.0f, 245/255.0f);
+	public Color orangeHighlight = new Color(250/255.0f, 180/255.0f, 70/255.0f);
+
 	public int lefthandSector;
 	public int righthandSector;
 	// Use this for initialization
@@ -72,11 +76,17 @@ public class Slug : MonoBehaviour {
 				textbox.color = highlightedColor;
 				outline.enabled = true;
 				shadow.enabled = true;
+
+				outline.effectColor = lightHighlight;
+				shadow.effectColor = lightHighlight;
 				break;
 			case (int) focusStates.SELECTED :
-				textbox.color = defaultColor;
+				textbox.color = highlightedColor;
 				outline.enabled = true;
-				shadow.enabled = false;
+				shadow.enabled = true;
+
+				outline.effectColor = orangeHighlight;
+				shadow.effectColor = orangeHighlight;
 				break;
 			default:
 				break;
