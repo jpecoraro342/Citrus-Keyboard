@@ -7,6 +7,8 @@ public class Pi : MonoBehaviour {
 	float radius = 4;
 	int numSlugs = 30;
 	public int numSectors = 6;
+
+	public Canvas slugCanvas;
 	
 	public LineRenderer lr;
 	public Slug[] slugs;
@@ -116,7 +118,7 @@ public class Pi : MonoBehaviour {
 				Debug.Log("New sector and insert Text at deg: "+ insertTextAtDeg);
 			}
 			GameObject slug = (GameObject)Instantiate (SlugClone, Vector3.zero, Quaternion.identity);
-			slug.transform.parent = gameObject.transform;
+			slug.transform.parent = slugCanvas.transform;
 			slug.transform.localPosition = Vector3.zero;
 
 			insertTextAtDeg -= 0.7f;
