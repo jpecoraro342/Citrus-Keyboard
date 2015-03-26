@@ -75,7 +75,9 @@ public class PiBridge : MonoBehaviour {
 	}
 
 	public void backSpace() {
-		InputTextArea.text = InputTextArea.text.Substring(0, InputTextArea.text.Length - 1);
+		if (InputTextArea.text.Length > 0) {
+			InputTextArea.text = InputTextArea.text.Substring(0, InputTextArea.text.Length - 1);
+		}
 	}
 
 	//right thumbstick released, add character to textbox
