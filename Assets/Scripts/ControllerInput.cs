@@ -13,7 +13,7 @@ public class ControllerInput : MonoBehaviour {
 	public float VisualJoystickMagnitude = 30;
 	public float JoystickSmoothing = 20;
 
-	private float CenteredThreshold = 0.25f;
+	private float CenteredThreshold = 0.8f;
 
 	public PiBridge Manager;
 
