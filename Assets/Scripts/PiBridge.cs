@@ -126,12 +126,12 @@ public class PiBridge : MonoBehaviour {
 	public void updateRight(float right) {
 		currentRightJoystickAngle = right;
 		int sector = rightAngleToZone (right, numRightSectors);
-		if (sector != lastRightSector) {
+		//if (sector != lastRightSector) {
 			lastRightSector = sector;
 			if (lastLeftSector != -1) {
 				pi.setFocusActive(lastLeftSector, lastRightSector);
 			}
-		}
+		//}
 	}
 
 	void UpdateDebugText() {
