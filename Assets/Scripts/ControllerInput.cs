@@ -13,7 +13,7 @@ public class ControllerInput : MonoBehaviour {
 	public float VisualJoystickMagnitude = 30;
 	public float JoystickSmoothing = 20;
 
-	public float CenteredThreshold = 1.0f;
+	private float CenteredThreshold = 0.25f;
 
 	public PiBridge Manager;
 
@@ -148,7 +148,7 @@ public class ControllerInput : MonoBehaviour {
 
 	bool DidLeftJoystickCenter() {
 		float VectorMagnitude = LeftInput.magnitude;
-
+	
 		if (VectorMagnitude > CenteredThreshold/4) {
 			//Joystick is not centered
 			LeftJoystickCentered = false;

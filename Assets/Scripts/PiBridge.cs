@@ -23,6 +23,8 @@ public class PiBridge : MonoBehaviour {
 	string[] lastTwoChars = new string[2] { "",""};
 	bool newSentence = true;
 	bool midSentence = false;
+	private float timer;
+	private bool canInput = false;
 	// Use this for initialization
 	void Start () {
 		
@@ -31,6 +33,10 @@ public class PiBridge : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		UpdateDebugText();
+		timer += Time.deltaTime;
+		if (timer > 2) {//seconds?
+			canInput = true;
+		}
 	}
 
 	int rightAngleToZone(float angle, int numZones) {
@@ -82,22 +88,28 @@ public class PiBridge : MonoBehaviour {
 
 	//right thumbstick released, add character to textbox
 	public void characterSelect() {
-		newSentence = false;
-		if (lastLeftSector != -1) {
-			string input = pi.getChar (lastLeftSector, lastRightSector);
-			InputTextArea.text += input;
-			pi.resetFocus ();
-			pi.setFocusDisabled(lastLeftSector);
+		if (canInput) {
 
-			lastTwoChars[0] = lastTwoChars[1];
-			lastTwoChars[1] = input;
+			newSentence = false;
+			if (lastLeftSector != -1) {
+				string input = pi.getChar (lastLeftSector, lastRightSector);
+				InputTextArea.text += input;
+				pi.resetFocus ();
+				pi.setFocusDisabled (lastLeftSector);
+
+				lastTwoChars [0] = lastTwoChars [1];
+				lastTwoChars [1] = input;
 
 
-			checkSentence();
+				checkSentence ();
+				//this might need to be moved out of this if.
+				canInput = false;
+
+			}
+
+			lastRightSector = -1;
 
 		}
-
-		lastRightSector = -1;
 	}
 
 	public void checkSentence() {
